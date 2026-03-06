@@ -1,4 +1,4 @@
-package com.gpelipas.springjpa;
+package com.gpelipas.bookmarkwebapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
