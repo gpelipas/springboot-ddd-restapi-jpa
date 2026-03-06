@@ -1,0 +1,41 @@
+
+# spring.sql.init.data-locations=classpath:db/data/data-dev.sql 
+
+
+
+server:
+  port: 8080
+
+
+spring:
+  profiles:
+    default: dev
+
+  application:
+    name: bookmark-web-api
+
+  sql:
+    init:
+      mode: never
+
+  h2:
+    console:
+      enabled: true
+
+  # datasource:
+  #   url: jdbc:h2:mem:mydb
+  #   username: sa
+  #   password: password
+  #   driverClassName: org.h2.Driver
+
+  # jpa:
+  #   database-platform: org.hibernate.dialect.H2Dialect      
+  #   hibernate:
+  #     ddl-auto: create
+  #   # properties:
+  #   #   hibernate:
+  #   #     hbm2ddl:
+  #   #       auto: none
+  #   #     show_sql: true
+  #   #     format_sql: true
+  #   #     use_sql_comments: true
