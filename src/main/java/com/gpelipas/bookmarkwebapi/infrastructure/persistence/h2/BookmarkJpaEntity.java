@@ -10,6 +10,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,5 +37,21 @@ public class BookmarkJpaEntity implements Serializable {
     private ZonedDateTime dateSaved;
 
     private Boolean active;
+
+
+    @PrePersist  
+    protected void onCreate() {  
+        // Update only on creation  
+
+        this.active = Boolean.TRUE;
+        this.dateSaved = ZonedDateTime.now();
+    }  
+ 
+    @PreUpdate  
+    protected void onUpdate() {  
+        // Update on every save after creation 
+
+        this.dateSaved = ZonedDateTime.now();  
+    } 
 
 }

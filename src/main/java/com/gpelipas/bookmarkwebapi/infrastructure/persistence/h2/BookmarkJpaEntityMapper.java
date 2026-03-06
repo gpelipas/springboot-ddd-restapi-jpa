@@ -7,7 +7,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import com.gpelipas.bookmarkwebapi.application.domain.model.Bookmark;
-import com.gpelipas.bookmarkwebapi.infrastructure.web.model.BookmarkWebDto;
 
 @Component
 public class BookmarkJpaEntityMapper {

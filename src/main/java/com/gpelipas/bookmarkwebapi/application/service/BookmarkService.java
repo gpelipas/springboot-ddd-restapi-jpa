@@ -38,11 +38,18 @@ public class BookmarkService implements BookmarkApi {
 
         bookmarkLogger.logInfo(this.getClass(), "Finding bookmarks using filter - {}", filter);
 
-        return bookmarkStore.find(filter);
+        var bookmarks = bookmarkStore.find(filter);
+
+        bookmarkLogger.logDebug(this.getClass(), "no. of bookmarks found - {}", bookmarks.size());
+
+        return bookmarks;
     }
 
     @Override
     public Bookmark addBookmark(Bookmark bookmark) {
+        bookmarkLogger.logDebug(this.getClass(), "Adding new bookmark {}", bookmark);
+
+
         Bookmark addedBookmark = bookmarkStore.add(bookmark);
 
         if (addedBookmark == null) {
@@ -50,22 +57,34 @@ public class BookmarkService implements BookmarkApi {
             throw new BookmarkOperationException(error);
         }
 
+        bookmarkLogger.logDebug(this.getClass(), "successfully added - {}", addedBookmark);
+
         return addedBookmark;
     }
 
     @Override
-    public void updateBookmark(Bookmark bookmark) {
+    public Bookmark updateBookmark(Bookmark bookmark) {
+        bookmarkLogger.logDebug(this.getClass(), "Updating bookmark {}", bookmark);
+
         Bookmark updatedBookmark = bookmarkStore.add(bookmark);
 
         if (updatedBookmark == null) {
             final String error = String.format("Failed updating bookmark - name: %s", bookmark.getName());
             throw new BookmarkOperationException(error);
         }
+
+        bookmarkLogger.logDebug(this.getClass(), "successfully updated - {}", updatedBookmark);
+
+        return updatedBookmark;
     }
 
     @Override
     public void deleteBookmark(String id) {
+        bookmarkLogger.logDebug(this.getClass(), "Deleting bookmark with id of {}", id);
+
         bookmarkStore.delete(id);
+
+        bookmarkLogger.logDebug(this.getClass(), "deletion completed for bookmark - {}", id);
     }
 
     public void setBookmarkStore(BookmarkStore bookmarkStore) {

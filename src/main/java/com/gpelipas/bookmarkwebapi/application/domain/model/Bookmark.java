@@ -54,4 +54,10 @@ public class Bookmark {
         this.active = active;
     }
 
+    @Override
+    public String toString() {
+        return "Bookmark [id=" + id + ", name=" + name + ", url=" + url + ", dateSaved=" + dateSaved + ", active="
+                + active + "]";
+    }
+
 }

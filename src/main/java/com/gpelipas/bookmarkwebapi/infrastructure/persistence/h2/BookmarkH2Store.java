@@ -10,8 +10,16 @@ import com.gpelipas.bookmarkwebapi.application.domain.model.Bookmark;
 import com.gpelipas.bookmarkwebapi.application.domain.model.BookmarkFilter;
 import com.gpelipas.bookmarkwebapi.application.domain.port.BookmarkStore;
 
+import lombok.extern.slf4j.Slf4j;
+
+
+/**
+ * BookmarkStore adpater using Spring Data, JPA and H2DB 
+ * 
+ */
+@Slf4j
 @Component
-public class BookmarkStoreAdapter implements BookmarkStore {
+public class BookmarkH2Store implements BookmarkStore {
 
     @Autowired
     private BookmarkJpaRepository bookmarkJpaRepository;
@@ -49,6 +57,10 @@ public class BookmarkStoreAdapter implements BookmarkStore {
     public Bookmark add(Bookmark bookmark) {
         var dto = bookmarkJpaEntityMapper.toDto(bookmark);
         dto = bookmarkJpaRepository.saveAndFlush(dto);
+
+        if (log.isDebugEnabled()) {
+            log.debug("newly added entity - {}", dto);
+        }
 
         return bookmarkJpaEntityMapper.toDomain(dto);
     }

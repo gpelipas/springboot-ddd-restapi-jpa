@@ -6,25 +6,39 @@ import org.springframework.stereotype.Component;
 
 import com.gpelipas.bookmarkwebapi.application.domain.port.BookmarkLogger;
 
+
+/**
+ * BookmarkLogger adpater using SLF4J 
+ * 
+ */
 @Component
-public class BookmarkLoggerAdapter implements BookmarkLogger {
+public class BookmarkSlf4jLogger implements BookmarkLogger {
 
     @Override
     public void logInfo(Class<?> clz, String message, Object... arg) {
-        Logger logger = BookmarkLoggerAdapter.getLogger(clz); 
-        logger.info(message, arg);
+        Logger logger = BookmarkSlf4jLogger.getLogger(clz); 
+
+        if (logger.isInfoEnabled()) {
+            logger.info(message, arg);
+        }
     }
 
     @Override
     public void logError(Class<?> clz, String message, Object... arg) {
-        Logger logger = BookmarkLoggerAdapter.getLogger(clz); 
-        logger.error(message, arg);
+        Logger logger = BookmarkSlf4jLogger.getLogger(clz); 
+
+        if (logger.isErrorEnabled()) {
+            logger.error(message, arg);
+        }
     }
 
     @Override
     public void logDebug(Class<?> clz, String message, Object... arg) {
-        Logger logger = BookmarkLoggerAdapter.getLogger(clz); 
-        logger.debug(message, arg);
+        Logger logger = BookmarkSlf4jLogger.getLogger(clz); 
+
+        if (logger.isDebugEnabled()) {
+            logger.debug(message, arg);
+        }
     }
     
     static Logger getLogger(Class<?> clazz) {

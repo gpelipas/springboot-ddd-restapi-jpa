@@ -5,6 +5,9 @@ import java.util.List;
 import com.gpelipas.bookmarkwebapi.application.domain.model.Bookmark;
 import com.gpelipas.bookmarkwebapi.application.domain.model.BookmarkFilter;
 
+/**
+ * Outbound Port for Bookmark domain storage 
+ */
 public interface BookmarkStore {
 
     Bookmark find(String id);

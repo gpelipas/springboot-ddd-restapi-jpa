@@ -23,6 +23,9 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springframework.boot:spring-boot-starter-webmvc")
 
+  implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+  testImplementation("org.springframework.boot:spring-boot-starter-thymeleaf-test")
+
   // implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
 
   compileOnly("org.projectlombok:lombok")

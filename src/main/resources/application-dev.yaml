@@ -1,6 +1,21 @@
 
 # spring.sql.init.data-locations=classpath:db/data/data-dev.sql 
 # spring.jpa.defer-datasource-initialization=true
+# logging.level.root=warn
+# logging.level.org.springframework.web=debug
+# logging.level.org.hibernate=error
+
+# logging.pattern.console=%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n
+
+logging:
+  pattern: 
+    console: "%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"
+
+  level:
+    root: WARN
+    org.springframework.web: INFO
+    com.gpelipas: DEBUG
+    org.springframework.jdbc.core: TRACE
 
 app:
   cors:
