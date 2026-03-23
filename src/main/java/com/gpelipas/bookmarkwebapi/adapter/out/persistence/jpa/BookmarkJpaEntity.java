@@ -1,0 +1,59 @@
+package com.gpelipas.bookmarkwebapi.adapter.out.persistence.jpa;
+
+import java.io.Serializable;
+import java.time.ZonedDateTime;
+
+import org.hibernate.annotations.TimeZoneStorage;
+import org.hibernate.annotations.TimeZoneStorageType;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "bookmarks")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class BookmarkJpaEntity implements Serializable {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)    
+    private String id;
+
+    private String title;
+    private String description;
+    private String url;
+    private String ownerId;
+
+    @TimeZoneStorage(TimeZoneStorageType.NATIVE)
+    private ZonedDateTime dateSaved;
+
+    private boolean active;
+
+
+    @PrePersist  
+    protected void onCreate() {  
+        // Update only on creation  
+
+        this.active = Boolean.TRUE;
+        this.dateSaved = ZonedDateTime.now();
+    }  
+ 
+    @PreUpdate  
+    protected void onUpdate() {  
+        // Update on every save after creation 
+
+        this.dateSaved = ZonedDateTime.now();  
+    } 
+
+}

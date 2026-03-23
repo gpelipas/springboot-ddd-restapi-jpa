@@ -1,10 +1,9 @@
 package com.gpelipas.bookmarkwebapi;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 // @SpringBootTest
-class SpringjpaApplicationTests {
+class SpringApplicationRunnerTest {
 
 	@Test
 	void contextLoads() {

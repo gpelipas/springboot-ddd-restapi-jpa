@@ -2,43 +2,50 @@ package com.gpelipas.bookmarkwebapi.application.service;
 
 import java.util.List;
 
-import com.gpelipas.bookmarkwebapi.application.domain.exception.BookmarkOperationException;
-import com.gpelipas.bookmarkwebapi.application.domain.port.BookmarkApi;
-import com.gpelipas.bookmarkwebapi.application.domain.port.BookmarkLogger;
-import com.gpelipas.bookmarkwebapi.application.domain.port.BookmarkStore;
-import com.gpelipas.bookmarkwebapi.application.domain.model.Bookmark;
-import com.gpelipas.bookmarkwebapi.application.domain.model.BookmarkFilter;
+import com.gpelipas.bookmarkwebapi.domain.exception.BookmarkExceptions;
+import com.gpelipas.bookmarkwebapi.domain.model.Bookmark;
+import com.gpelipas.bookmarkwebapi.domain.model.BookmarkId;
+import com.gpelipas.bookmarkwebapi.domain.model.BookmarksSearchCriteria;
+import com.gpelipas.bookmarkwebapi.domain.port.in.CreateBookmarkUseCase;
+import com.gpelipas.bookmarkwebapi.domain.port.in.DeleteBookmarkUseCase;
+import com.gpelipas.bookmarkwebapi.domain.port.in.FindBookmarksUseCase;
+import com.gpelipas.bookmarkwebapi.domain.port.in.UpdateBookmarkUseCase;
+import com.gpelipas.bookmarkwebapi.domain.port.out.BookmarkStore;
+import com.gpelipas.bookmarkwebapi.domain.support.BookmarkLogger;
 
 /**
  * Bookmark Application Service
  * 
  */
-public class BookmarkService implements BookmarkApi {
+public class BookmarkService
+        implements FindBookmarksUseCase, CreateBookmarkUseCase, UpdateBookmarkUseCase, DeleteBookmarkUseCase {
 
     private BookmarkLogger bookmarkLogger;
 
     private BookmarkStore bookmarkStore;
 
-    @Override
-    public Bookmark findBookmark(String id) {
-
-        bookmarkLogger.logInfo(this.getClass(), "Finding bookmark using id - {}", id);
-
-        Bookmark bookmark = bookmarkStore.find(id);
-
-        if (bookmark == null) {
-            throw new BookmarkOperationException("Unable to find bookmark using id of " + id);
-        }
-
-        return bookmark;
+    public BookmarkService(BookmarkLogger bookmarkLogger, BookmarkStore bookmarkStore) {
+        this.bookmarkLogger = bookmarkLogger;
+        this.bookmarkStore = bookmarkStore;
     }
 
     @Override
-    public List<Bookmark> findBookmarks(BookmarkFilter filter) {
+    public Bookmark find(String id) {
 
-        bookmarkLogger.logInfo(this.getClass(), "Finding bookmarks using filter - {}", filter);
+        bookmarkLogger.logInfo(this.getClass(), "Finding bookmark using id - {}", id);
 
-        var bookmarks = bookmarkStore.find(filter);
+        var bookmarkId = BookmarkId.of(id);
+
+        return bookmarkStore.findById(bookmarkId)
+                .orElseThrow(() -> BookmarkExceptions.notFound(bookmarkId));
+    }
+
+    @Override
+    public List<Bookmark> find(BookmarksSearchCriteria criteria) {
+
+        bookmarkLogger.logInfo(this.getClass(), "Finding bookmarks using filter - {}", criteria);
+
+        var bookmarks = bookmarkStore.findAll(criteria);
 
         bookmarkLogger.logDebug(this.getClass(), "no. of bookmarks found - {}", bookmarks.size());
 
@@ -46,53 +53,40 @@ public class BookmarkService implements BookmarkApi {
     }
 
     @Override
-    public Bookmark addBookmark(Bookmark bookmark) {
+    public Bookmark create(Bookmark bookmark) {
         bookmarkLogger.logDebug(this.getClass(), "Adding new bookmark {}", bookmark);
 
+        bookmarkStore.save(bookmark);
 
-        Bookmark addedBookmark = bookmarkStore.add(bookmark);
-
-        if (addedBookmark == null) {
-            final String error = String.format("Failed adding new bookmark - name: %s", bookmark.getName());
-            throw new BookmarkOperationException(error);
+        if (!bookmark.hasId()) {
+            throw BookmarkExceptions.saveFailed(bookmark.title(), null);
         }
 
-        bookmarkLogger.logDebug(this.getClass(), "successfully added - {}", addedBookmark);
+        bookmarkLogger.logDebug(this.getClass(), "successfully added - {}", bookmark);
 
-        return addedBookmark;
+        return bookmark;
     }
 
     @Override
-    public Bookmark updateBookmark(Bookmark bookmark) {
+    public Bookmark update(Bookmark bookmark) {
         bookmarkLogger.logDebug(this.getClass(), "Updating bookmark {}", bookmark);
 
-        Bookmark updatedBookmark = bookmarkStore.add(bookmark);
+        bookmarkStore.save(bookmark);
 
-        if (updatedBookmark == null) {
-            final String error = String.format("Failed updating bookmark - name: %s", bookmark.getName());
-            throw new BookmarkOperationException(error);
-        }
+        bookmarkLogger.logDebug(this.getClass(), "successfully updated - {}", bookmark);
 
-        bookmarkLogger.logDebug(this.getClass(), "successfully updated - {}", updatedBookmark);
-
-        return updatedBookmark;
+        return bookmark;
     }
 
     @Override
-    public void deleteBookmark(String id) {
+    public void delete(String id) {
         bookmarkLogger.logDebug(this.getClass(), "Deleting bookmark with id of {}", id);
 
-        bookmarkStore.delete(id);
+        var bookmarkId = BookmarkId.of(id);
 
-        bookmarkLogger.logDebug(this.getClass(), "deletion completed for bookmark - {}", id);
-    }
+        bookmarkStore.delete(bookmarkId);
 
-    public void setBookmarkStore(BookmarkStore bookmarkStore) {
-        this.bookmarkStore = bookmarkStore;
-    }
-
-    public void setBookmarkLogger(BookmarkLogger bookmarkLogger) {
-        this.bookmarkLogger = bookmarkLogger;
+        bookmarkLogger.logDebug(this.getClass(), "successfully deleted bookmark - {}", id);
     }
 
 }

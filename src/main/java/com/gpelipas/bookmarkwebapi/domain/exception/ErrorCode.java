@@ -1,0 +1,15 @@
+package com.gpelipas.bookmarkwebapi.domain.exception;
+
+public enum ErrorCode {
+    BOOKMARK_NOT_FOUND,
+    BOOKMARK_ALREADY_ARCHIVED,
+    BOOKMARK_NOT_ARCHIVED,
+    BOOKMARK_NOT_PERSISTED,  
+    BOOKMARK_SAVE_FAILED, 
+    DUPLICATE_URL,
+    INVALID_USER_ID,
+    INVALID_URL_FORMAT,
+    INVALID_ID_FORMAT,
+    INVALID_TITLE,
+    UNEXPECTED_ERROR,
+}
