@@ -13,8 +13,14 @@ server:
       enabled: false
 
 spring:
-  profiles:
-    default: dev
+
+#
+# SPRING_PROFILES_ACTIVE=local ./gradlew bootRun
+# .. or
+# ./gradlew bootRun -Dspring.profiles.active=local
+#
+  # profiles:
+  #   default: local  # for local demo only
 
   application:
     name: bookmark-web-api
